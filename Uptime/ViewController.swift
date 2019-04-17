@@ -10,8 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var hostnameLabel: UILabel?
-    var uptimeLabel: UILabel?
+    var hostnameLabel: UILabel!
+    var uptimeLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,34 +33,31 @@ class ViewController: UIViewController {
         rect.origin.x = (self.view.frame.width/2)-(rect.size.width/2)   //only needed if .textAlignment!=.center
         rect.origin.y += CGFloat(100)
         
-        hostnameLabel = UILabel(frame: rect)
-        hostnameLabel?.textAlignment = NSTextAlignment.center
+        self.hostnameLabel = UILabel(frame: rect)
         
-        guard let label = hostnameLabel else {
+        guard let label = self.hostnameLabel else {
             return
         }
         
-        if case let hostnameLabel? = hostnameLabel {
-            self.view.addSubview(hostnameLabel)
-        }
+        self.view.addSubview(label)
+        label.textAlignment = NSTextAlignment.center
         
         rect.origin.y += label.frame.size.height
         
-        uptimeLabel = UILabel(frame: rect)
+        self.uptimeLabel = UILabel(frame: rect)
         
-        if case let uptimeLabel? = uptimeLabel {
-            self.view.addSubview(uptimeLabel)
+        if case let utimeLabel? = self.uptimeLabel {
+            self.view.addSubview(utimeLabel)
+            utimeLabel.textAlignment = NSTextAlignment.center
         }
-        
-        uptimeLabel?.textAlignment = NSTextAlignment.center
     }
     
     @objc func readData() -> Void {
         let processInfo: ProcessInfo = ProcessInfo.processInfo
         NSLog("%@",processInfo.hostName)
         
-        hostnameLabel?.text = processInfo.hostName
-        uptimeLabel?.text = processInfo.systemUptime.description + " sec"
+        self.hostnameLabel.text = processInfo.hostName
+        self.uptimeLabel.text = processInfo.systemUptime.description + " sec"
     }
 
 
