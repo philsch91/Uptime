@@ -11,13 +11,14 @@ import UIKit
 class ViewController: UIViewController {
     
     var hostnameLabel: UILabel!
-    var uptimeLabel: UILabel!
+    var systemUptimeLabel: UILabel!
+    var sysctlUptimeLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.title="Uptime"
+        self.title = "Uptime"
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Refresh", style: UIBarButtonItem.Style.plain, target: self, action: #selector(self.readData))
         
@@ -33,22 +34,44 @@ class ViewController: UIViewController {
         rect.origin.x = (self.view.frame.width/2)-(rect.size.width/2)   //only needed if .textAlignment!=.center
         rect.origin.y += CGFloat(100)
         
+        let color = ColorCompatibility.label
+        print(color)
+        
+        //create hostnameLabel
+        
         self.hostnameLabel = UILabel(frame: rect)
+        //self.hostnameLabel.textColor = ColorCompatibility.label
         
         guard let label = self.hostnameLabel else {
             return
         }
         
-        self.view.addSubview(label)
         label.textAlignment = NSTextAlignment.center
+        self.view.addSubview(label)
+        
+        //create systemUptimeLabel
         
         rect.origin.y += label.frame.size.height
         
-        self.uptimeLabel = UILabel(frame: rect)
+        self.systemUptimeLabel = UILabel(frame: rect)
+        //self.sysctlUptimeLabel.textColor = ColorCompatibility.label
+        //self.sysctlUptimeLabel.textColor = color
         
-        if case let utimeLabel? = self.uptimeLabel {
-            self.view.addSubview(utimeLabel)
-            utimeLabel.textAlignment = NSTextAlignment.center
+        if case let uptimeLabel? = self.systemUptimeLabel {
+            uptimeLabel.textAlignment = NSTextAlignment.center
+            self.view.addSubview(uptimeLabel)
+        }
+        
+        //create sysctlUptimeLabel
+        
+        rect.origin.y += label.frame.size.height
+        
+        self.sysctlUptimeLabel = UILabel(frame: rect)
+        //self.sysctlUptimeLabel.textColor = ColorCompatibility.label
+        
+        if let sysUptimeLabel = self.sysctlUptimeLabel {
+            sysUptimeLabel.textAlignment = NSTextAlignment.center
+            self.view.addSubview(sysUptimeLabel)
         }
     }
     
@@ -57,9 +80,32 @@ class ViewController: UIViewController {
         NSLog("%@",processInfo.hostName)
         
         self.hostnameLabel.text = processInfo.hostName
-        self.uptimeLabel.text = processInfo.systemUptime.description + " sec"
+        self.systemUptimeLabel.text = processInfo.systemUptime.description + " sec"
+        
+        let bootTime: timeval = readKernelBootTime()
+        
+        var time: timeval = timeval(tv_sec: 0, tv_usec: 0)
+        gettimeofday(&time, nil)
+        
+        //print(time)
+        //print(bootTime)
+        
+        let uptime = Double(time.tv_sec - bootTime.tv_sec)
+        print(uptime)
+        self.sysctlUptimeLabel.text = String(uptime) + " sec"
     }
+    
+    func readKernelBootTime() -> timeval {
+        var mib = [CTL_KERN, KERN_BOOTTIME]
+        var bootTime = timeval()
+        var size = MemoryLayout<timeval>.size
+        //var size = strideof(timeval)
 
+        if 0 != sysctl(&mib, UInt32(mib.count), &bootTime, &size, nil, 0) {
+            fatalError("Could not get boot time, errno: \(errno)")
+        }
 
+        return bootTime
+    }
 }
 
