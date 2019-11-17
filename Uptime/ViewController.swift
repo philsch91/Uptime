@@ -34,18 +34,17 @@ class ViewController: UIViewController {
         rect.origin.x = (self.view.frame.width/2)-(rect.size.width/2)   //only needed if .textAlignment!=.center
         rect.origin.y += CGFloat(100)
         
-        let color = ColorCompatibility.label
-        print(color)
+        print(ColorCompatibility.label)
         
         //create hostnameLabel
         
         self.hostnameLabel = UILabel(frame: rect)
-        //self.hostnameLabel.textColor = ColorCompatibility.label
         
         guard let label = self.hostnameLabel else {
             return
         }
         
+        label.textColor = ColorCompatibility.label;
         label.textAlignment = NSTextAlignment.center
         self.view.addSubview(label)
         
@@ -54,10 +53,9 @@ class ViewController: UIViewController {
         rect.origin.y += label.frame.size.height
         
         self.systemUptimeLabel = UILabel(frame: rect)
-        //self.sysctlUptimeLabel.textColor = ColorCompatibility.label
-        //self.sysctlUptimeLabel.textColor = color
         
         if case let uptimeLabel? = self.systemUptimeLabel {
+            uptimeLabel.textColor = ColorCompatibility.label
             uptimeLabel.textAlignment = NSTextAlignment.center
             self.view.addSubview(uptimeLabel)
         }
@@ -67,9 +65,9 @@ class ViewController: UIViewController {
         rect.origin.y += label.frame.size.height
         
         self.sysctlUptimeLabel = UILabel(frame: rect)
-        //self.sysctlUptimeLabel.textColor = ColorCompatibility.label
         
         if let sysUptimeLabel = self.sysctlUptimeLabel {
+            sysUptimeLabel.textColor = ColorCompatibility.label
             sysUptimeLabel.textAlignment = NSTextAlignment.center
             self.view.addSubview(sysUptimeLabel)
         }
