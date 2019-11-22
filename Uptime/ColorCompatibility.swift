@@ -9,6 +9,34 @@
 import UIKit
 
 public enum ColorCompatibility {
+    static var systemBackground: UIColor {
+        if #available(iOS 13, *) {
+            return UIColor.systemBackground
+        }
+        return UIColor.white
+    }
+    
+    static var secondarySystemBackground: UIColor {
+        if #available(iOS 13, *) {
+            return UIColor.secondarySystemBackground
+        }
+        return UIColor.white
+    }
+    
+    static var systemFill: UIColor {
+        if #available(iOS 13, *) {
+            return UIColor.systemFill
+        }
+        return UIColor.init(white: 0.9, alpha: 1)
+    }
+    
+    static var secondarySystemFill: UIColor {
+        if #available(iOS 13, *) {
+            return UIColor.secondarySystemFill
+        }
+        return UIColor.init(white: 0.9, alpha: 1)
+    }
+    
     static var label: UIColor {
         if #available(iOS 13, *) {
             return UIColor.label

@@ -26,6 +26,7 @@ class ViewController: UIViewController {
     }
     
     func setupUI() -> Void {
+        self.view.backgroundColor = ColorCompatibility.secondarySystemBackground
         var rect: CGRect = self.view.frame //as CGRect
         //rect.size.height=frame.size.width
         rect.size.height = 44
